@@ -9,13 +9,17 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet private var buttons: [UIButton]!
+    @IBOutlet private weak var undoButton: UIBarButtonItem!
+    
     private var selectedColor: UIColor = .white
     private var colorCount: [UIColor:Int] = [:]
+    private var undoStamps: [UILabel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
         view.addGestureRecognizer(tap)
+        updateUndoButtonState()
     }
     
     @objc private func tapped(_ tap: UITapGestureRecognizer) {
@@ -36,8 +40,9 @@ class ViewController: UIViewController {
             colorCount[selectedColor] = 1
             stamp.text = "1"
         }
-        
+        undoStamps.append(stamp)
         view.addSubview(stamp)
+        updateUndoButtonState()
     }
     
     @IBAction private func buttonTapped(_ sender: UIButton) {
@@ -47,9 +52,28 @@ class ViewController: UIViewController {
         updateButton(sender)
     }
     
+    
+    @IBAction func undoTapped(_ sender: Any) {
+        guard let stamp = undoStamps.popLast(), let color = stamp.backgroundColor, let count = colorCount[color] else {
+            return
+        }
+        
+        colorCount[color] = count - 1
+        stamp.removeFromSuperview()
+        updateUndoButtonState()
+    }
+    
     private func updateButton(_ button: UIButton) {
         buttons.forEach {  $0.alpha = 1 }
         button.alpha = 0.8
+    }
+    
+    func updateUndoButtonState() {
+        if undoStamps.isEmpty, undoButton.isEnabled {
+            undoButton.isEnabled = false
+        } else if !undoStamps.isEmpty, !undoButton.isEnabled {
+            undoButton.isEnabled = true
+        }
     }
     
 }
