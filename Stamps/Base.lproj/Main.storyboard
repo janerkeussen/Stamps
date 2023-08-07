@@ -78,13 +78,21 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="XH6-Qx-P2k">
-                        <barButtonItem key="rightBarButtonItem" systemItem="undo" id="QMf-bk-MxI">
-                            <connections>
-                                <action selector="undoTapped:" destination="BYZ-38-t0r" id="Nyh-O2-bJO"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="undo" id="QMf-bk-MxI">
+                                <connections>
+                                    <action selector="undoTapped:" destination="BYZ-38-t0r" id="Nyh-O2-bJO"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="redo" id="cnC-Ug-i68">
+                                <connections>
+                                    <action selector="redoTapped:" destination="BYZ-38-t0r" id="OtX-RL-CAJ"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="redoButton" destination="cnC-Ug-i68" id="Pru-pz-EeN"/>
                         <outlet property="undoButton" destination="QMf-bk-MxI" id="Tdn-dU-lbh"/>
                         <outletCollection property="buttons" destination="Sgb-QT-fBK" collectionClass="NSMutableArray" id="DwM-io-G4b"/>
                         <outletCollection property="buttons" destination="FJd-bl-uc1" collectionClass="NSMutableArray" id="Yfh-cb-9FX"/>

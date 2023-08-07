@@ -10,16 +10,19 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet private var buttons: [UIButton]!
     @IBOutlet private weak var undoButton: UIBarButtonItem!
+    @IBOutlet private weak var redoButton: UIBarButtonItem!
     
     private var selectedColor: UIColor = .white
     private var colorCount: [UIColor:Int] = [:]
     private var undoStamps: [UILabel] = []
+    private var redoStamps: [UILabel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
         view.addGestureRecognizer(tap)
         updateUndoButtonState()
+        updateRedoButtonState()
     }
     
     @objc private func tapped(_ tap: UITapGestureRecognizer) {
@@ -59,8 +62,22 @@ class ViewController: UIViewController {
         }
         
         colorCount[color] = count - 1
+        redoStamps.append(stamp)
         stamp.removeFromSuperview()
         updateUndoButtonState()
+        updateRedoButtonState()
+    }
+    
+    @IBAction func redoTapped(_ sender: Any) {
+        guard let stamp = redoStamps.popLast(), let color = stamp.backgroundColor, let count = colorCount[color] else {
+            return
+        }
+        
+        colorCount[color] = count + 1
+        undoStamps.append(stamp)
+        view.addSubview(stamp)
+        updateUndoButtonState()
+        updateRedoButtonState()
     }
     
     private func updateButton(_ button: UIButton) {
@@ -76,5 +93,12 @@ class ViewController: UIViewController {
         }
     }
     
+    func updateRedoButtonState() {
+        if redoStamps.isEmpty, redoButton.isEnabled {
+            redoButton.isEnabled = false
+        } else if !redoStamps.isEmpty, !redoButton.isEnabled {
+            redoButton.isEnabled = true
+        }
+    }
 }
 
