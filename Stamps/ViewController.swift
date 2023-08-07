@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet private var buttons: [UIButton]!
     private var selectedColor: UIColor = .white
+    private var colorCount: [UIColor:Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +24,19 @@ class ViewController: UIViewController {
     }
     
     private func addStamp(at loc: CGPoint) {
-        let stamp = UIView(frame: CGRect(x: loc.x, y: loc.y, width: 50, height: 50))
+        let stamp = UILabel(frame: CGRect(x: loc.x, y: loc.y, width: 50, height: 50))
         stamp.backgroundColor = selectedColor
+        stamp.textColor = .white
+        stamp.textAlignment = .center
+        
+        if let count = colorCount[selectedColor] {
+            colorCount[selectedColor] = count + 1
+            stamp.text = "\(count + 1)"
+        } else {
+            colorCount[selectedColor] = 1
+            stamp.text = "1"
+        }
+        
         view.addSubview(stamp)
     }
     
